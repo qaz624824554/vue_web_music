@@ -18,7 +18,7 @@
     "vue-lazyload": "^1.3.3",
     "axios": "^0.19.2",
     "jsonp": "^0.2.1",
-    "better-scroll": "^1.15.2",
+    "better-scroll": "0.1.15",
     "express": "^4.17.1"
   },
   "devDependencies": {
