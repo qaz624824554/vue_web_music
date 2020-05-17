@@ -20,6 +20,7 @@
             v-for="item in group.items"
             :key="item.id"
             class="list-group-item"
+            @click="selectItem(item)"
           >
             <img v-lazy="item.avatar" class="avatar" />
             <span class="name">{{ item.name }}</span>
@@ -86,6 +87,9 @@ export default {
     Loading
   },
   methods: {
+    selectItem(item) {
+      this.$emit('select', item)
+    },
     onShortcutTouchStart(e) {
       let anchorIndex = getData(e.target, 'index')
       this.touch.y1 = e.touches[0].pageY
@@ -101,6 +105,9 @@ export default {
     scroll(pos) {
       // scrollY是负数
       this.scrollY = pos.y
+    },
+    refresh() {
+      this.$refs.listview.refresh()
     },
     _scrollTo(index) {
       if (index < 0) {

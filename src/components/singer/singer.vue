@@ -1,6 +1,7 @@
 <template>
-  <div class="singer">
-    <listview :data="singerList"></listview>
+  <div class="singer" ref="singer">
+    <listview :data="singerList" @select="selectSinger" ref="listview"></listview>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -9,11 +10,14 @@ import { getSingerList } from 'api/singer.js'
 import { ERR_OK } from 'api/config'
 import Singer from 'common/js/singer.js'
 import Listview from 'base/listview/listview.vue'
+import { mapMutations } from 'vuex'
+import { playListMixin } from 'common/js/mixins.js'
 
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
 
 export default {
+  mixins: [playListMixin],
   data() {
     return {
       singerList: []
@@ -23,6 +27,13 @@ export default {
     this._getSingerList()
   },
   methods: {
+    selectSinger(singer) {
+      this.$router.push({
+        path: `/singer/${singer.id}`
+      })
+      // 为state.singer传递值
+      this.setSinger(singer)
+    },
     _getSingerList() {
       getSingerList().then(res => {
         if (res.code === ERR_OK) {
@@ -30,6 +41,12 @@ export default {
         }
       })
     },
+    handlePlayList(playlist) {
+      const bottom = playlist.length > 0 ? '60px' : 0
+      this.$refs.singer.style.bottom = bottom
+      this.$refs.listview.refresh()
+    },
+    // 对数据进行改造
     _normalizeSinger(list) {
       let map = {
         hot: {
@@ -75,7 +92,10 @@ export default {
         return a.title.charCodeAt(0) - b.title.charCodeAt(0)
       })
       return hot.concat(ret)
-    }
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    })
   },
   components: {
     Listview
@@ -84,9 +104,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .singer
-    position fixed
-    top 88px
-    bottom 0
-    width 100%
+.singer
+  position fixed
+  top 88px
+  bottom 0
+  width 100%
 </style>
