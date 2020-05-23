@@ -52,8 +52,10 @@ export function getPlaySongKey(mid) {
 export function getSongUrl(mid) {
   return getPlaySongKey(mid).then(res => {
     if (res.code === ERR_OK) {
-      const purl = res.req_0.data.midurlinfo[0].purl
-      return Promise.resolve({ code: ERR_OK, url: purl })
+      try {
+        const purl = res.req_0.data.midurlinfo[0].purl
+        return Promise.resolve({ code: ERR_OK, url: purl })
+      } catch (e) {}
     }
   })
 }

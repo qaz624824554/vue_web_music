@@ -3,7 +3,7 @@
     <m-header></m-header>
     <tag></tag>
     <keep-alive>
-      <router-view />
+      <router-view></router-view>
     </keep-alive>
     <player></player>
   </div>

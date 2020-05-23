@@ -25,7 +25,7 @@
     >
       <div class="song-list-wrapper">
         <!-- 歌曲组件 -->
-        <song-list :songs="songs" @select="selectItem"></song-list>
+        <song-list :songs="songs" @select="selectItem" :rank="rank"></song-list>
       </div>
       <div class="loading-container" v-show="!songs.length">
         <loading></loading>
@@ -67,6 +67,10 @@ export default {
       default() {
         return []
       }
+    },
+    rank: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

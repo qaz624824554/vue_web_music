@@ -37,10 +37,12 @@ export default {
       if (!this.singer.id) {
         this.$router.push('/singer')
       }
-      getSingerDetail(this.singer.id).then(res => {
-        if (res.code === ERR_OK) {
-          this.songs = this._normalizeSongs(res.data.list)
-        }
+      return new Promise((resolve, reject) => {
+        getSingerDetail(this.singer.id).then(res => {
+          if (res.code === ERR_OK) {
+            this.songs = this._normalizeSongs(res.data.list)
+          }
+        })
       })
     },
     _normalizeSongs(list) {

@@ -25,6 +25,15 @@ const getters = {
   },
   disc(state) {
     return state.disc
+  },
+  topList(state) {
+    return state.topList
+  },
+  searchHistory(state) {
+    return state.searchHistory
+  },
+  playHistory(state) {
+    return state.playHistory
   }
 }
 

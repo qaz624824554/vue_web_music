@@ -37,6 +37,10 @@ export default {
   },
   methods: {
     _getSongList() {
+      // 刷新退回上一路由
+      if (!this.disc.dissid) {
+        this.$router.back()
+      }
       getSongList(this.disc.dissid).then(res => {
         if (res.code === ERR_OK) {
           this.songs = this._nomalizeSongList(res.cdlist[0].songlist)
