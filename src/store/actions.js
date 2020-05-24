@@ -1,7 +1,7 @@
 import * as types from './mutation-types'
 import { shuffle } from 'common/js/util.js'
 import { playMode } from 'common/js/config.js'
-import { saveSearch, deleteSearch, clearStorage, savePlayHistory } from 'common/js/catch.js'
+import { saveSearch, deleteSearch, clearStorage, savePlayHistory, saveFavoriteList, deleteFavoriteList } from 'common/js/catch.js'
 
 function findIndex(list, song) {
   return list.findIndex(item => {
@@ -24,14 +24,20 @@ const actions = {
     commit(types.SET_FULL_SCREEN, true)
     commit(types.SET_PLAYING, true)
   },
-  randomPlay({ commit }, { list }) {
+  randomPlay({ commit, state }, { list }) {
     let randomList = shuffle(list)
     commit(types.SET_PLAY_LIST, randomList)
     commit(types.SET_SEQUENCE_LIST, list)
     commit(types.SET_CURRENT_INDEX, 0)
     commit(types.SET_MODE, playMode.random)
-    commit(types.SET_PLAYING, true)
-    commit(types.SET_FULL_SCREEN, true)
+    // url为空不播放
+    if (state.playList[state.currentIndex].url !== '') {
+      commit(types.SET_PLAYING, true)
+      commit(types.SET_FULL_SCREEN, true)
+    } else {
+      commit(types.SET_PLAYING, false)
+      commit(types.SET_FULL_SCREEN, false)
+    }
   },
   insertSong({ commit, state }, song) {
     let playlist = state.playList.slice()
@@ -114,6 +120,12 @@ const actions = {
   },
   savePlayHistory({ commit }, song) {
     commit(types.SET_PLAY_HISTORY, savePlayHistory(song))
+  },
+  saveFavorite({ commit }, song) {
+    commit(types.SET_FAVORITE_LIST, saveFavoriteList(song))
+  },
+  deleteFavorite({ commit }, song) {
+    commit(types.SET_FAVORITE_LIST, deleteFavoriteList(song))
   }
 }
 

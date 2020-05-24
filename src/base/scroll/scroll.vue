@@ -39,12 +39,12 @@ export default {
     }
   },
   mounted() {
-    // setTimeout(() => {
-    //   this._initScroll()
-    // }, 20)
-    this.$nextTick(() => {
+    setTimeout(() => {
       this._initScroll()
-    })
+    }, 20)
+    // this.$nextTick(() => {
+    //   this._initScroll()
+    // })
   },
   methods: {
     _initScroll() {

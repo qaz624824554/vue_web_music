@@ -63,7 +63,7 @@
               <i class="icon-next" @click="next"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon icon-not-favorite"></i>
+              <i :class="getFavoriteIcon(currentSong)"  @click.stop="toggleFavorite(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@
       </div>
     </transition>
     <playlist ref="playlistRef"></playlist>
-    <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error" @timeupdate="timeUpdate" @ended="end"></audio>
+    <audio :src="currentSong.url" ref="audio" @play="ready" @error="error" @timeupdate="timeUpdate" @ended="end"></audio>
   </div>
 </template>
 
@@ -188,6 +188,7 @@ export default {
       this.$refs.cdWrapper.style.transition = ''
       this.$refs.cdWrapper.style[transform] = ''
     },
+    // 暂停切换按钮
     togglePlaying() {
       if (!this.songReady) {
         return
@@ -310,8 +311,11 @@ export default {
     },
     // 获取歌词
     getLyric() {
-      this.currentSong.getLyric().then(res => {
-        this.currentLyric = new Lyric(res, this.handleLyric)
+      this.currentSong.getLyric().then(lyric => {
+        if (this.currentSong.lyric !== lyric) {
+          return
+        }
+        this.currentLyric = new Lyric(lyric, this.handleLyric)
         if (this.playing) {
           this.currentLyric.play()
         }
@@ -424,7 +428,8 @@ export default {
       if (this.currentLyric) {
         this.currentLyric.stop()
       }
-      setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$refs.audio.play()
         this.getLyric()
       }, 1000)
@@ -613,6 +618,8 @@ export default {
             font-size 40px
         .i-right
           text-align left
+          .icon-favorite
+            color $color-sub-theme
     &.normal-enter-active, &.normal-leave-active
       transition all 0.4s
       .top, .bottom
